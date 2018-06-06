@@ -9,15 +9,17 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+    //deklareerin muutujad
+    //kahemõõteline array
     private Button[][] buttons = new Button[3][3];
-
+    //player1 ehk X alustab alati ennem
     private boolean player1Turn = true;
-
+    //loeb rounde ehk kordi
     private int roundCount;
 
     private int player1Points;
     private int player2Points;
-
+    //loeb mängijate punkte
     private TextView textViewPlayer1;
     private TextView textViewPlayer2;
 
@@ -25,12 +27,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //lähtestan muutujad
         textViewPlayer1 = findViewById(R.id.text_view_p1);
         textViewPlayer2 = findViewById(R.id.text_view_p2);
 
+        //Siin ma kirjutan viited oma tekstile, aga selle asemel, et kirjutan kõik 9 nuppu üks haaval välja ma panen need nested loopi.
+        //we increment I with each round in this loop
+        //siin me kinnitame oma nuppe nii selle nested loopi silmuse kaudu, et me kajastaksime kõik meie read ja veerud meie kahemõõtmelise nupude arrays
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
+                //button_ on iga nuppu ID algus
                 String buttonID = "button_" + i + j;
                 int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
                 buttons[i][j] = findViewById(resID);
