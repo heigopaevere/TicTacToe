@@ -162,15 +162,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Lähestab meie mängu ala et uus round saaks alata
         resetBoard();
     }
-
+    //Mängijate punktide koguste meetod
     private void updatePointsText() {
+        //Uuendab textView viiteid
         textViewPlayer1.setText("Player 1: " + player1Points);
         textViewPlayer2.setText(("Player 2: " + player2Points));
     }
-
+    //Selles meetodis me tahame lähestada kõik oma nuppud tühjale stringle, lähestada oma roundcount nulli ja panna oma player1Turn trueks, et järgmises roundis player1 alustab esimesena
     private void resetBoard() {
         for (int i=0; i < 3; i++){
             for (int j = 0; j < 3; j++){
+                //loopib läbi kõik meie nuppud ja määrab need tühjale stringile
                 buttons[i][j].setText("");
             }
         }
@@ -180,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void resetGame() {
+        //Resetib mõlema mängija punktid nulli
         player1Points = 0;
         player2Points = 0;
         updatePointsText();
@@ -189,13 +192,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        //Kui seadet pöörata landsacpe modei siis äpp hävitab roundcounti, nuppudel oleva teksti ja mängija punktid ära.
+        //Selle jaoks, et need andmed jääksid alles ma loon üleval oleva meetodi mis salvestab need andmed
+        //Määran mis andmed salvestatakse kui seade peaks minema landscape modei
         outState.putInt("roundCount", roundCount);
         outState.putInt("player1Points", player1Points);
         outState.putInt("player2Points", player2Points);
         outState.putBoolean("player1Turn", player1Turn);
     }
-
+    //Taastab originaal asendise pärast orientatsiooni muutust
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
