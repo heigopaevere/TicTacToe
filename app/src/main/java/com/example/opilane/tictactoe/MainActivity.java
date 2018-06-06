@@ -37,9 +37,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 //button_ on iga nuppu ID algus
+                //loopib läbi kõik nuppude ID-d
                 String buttonID = "button_" + i + j;
+                //see on ressursi ID, mille me peame läbima, et leidma view by ID
                 int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
+                //sel moel saame viiteid kõigile oma nuppudele, ilma et peaksite neid ükshaaval määrama
                 buttons[i][j] = findViewById(resID);
+                //me edastame oma Main Activity kui onclick kuulajana
                 buttons[i][j].setOnClickListener(this);
             }
         }
@@ -53,51 +57,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
+    //see on click meetod kuulab kõigi üheksa nuppu vajudust
     @Override
     public void onClick(View v) {
+        //Kontrollib, kas see nupp, millele klõpsati, et sellel oleks tühi string. Kui ei,l see tähedab seda, et selle nuppule on juba vajutatud
         if (!((Button) v).getText().toString().equals("")){
             return;
         }
-
+        //Muudab nuppude teksti
+        //Kontrollib kas on mängija ühe kord
         if (player1Turn) {
             ((Button) v).setText("X");
+        //Mängija kahe kord
         } else {
             ((Button) v).setText("O");
         }
-
+        //Kui keegi on oma käigu ära teinud, me tahame incrementida roundcounti nii et me teaksime, et üks round on läbi
         roundCount++;
-
+        //Kontrollib milline mängija on võitnud
         if (checkForWin()) {
+            //Kui on player1 kord siis mängija üks võidab
             if (player1Turn){
                 player1Wins();
+            //Kui ei ole mängija ühe kord siis mängija 2 võidab
             } else {
                 player2Wins();
             }
+            //Kui üheksa käiku on möödas siis on viik
         } else if (roundCount == 9) {
             draw();
+            //Kui pole võitjat ega viiki siis on mängija ühe kord
         } else {
             player1Turn = !player1Turn;
         }
     }
-
+    //Kontrollib kas keegi on võitnud või ei
+    //Rida, veerude või diagonaali kontroll peab võrduma trueiga, et selguks võitja
     private boolean checkForWin() {
+        //Siin me peame läbima kõik oma read, veerud ja diagonaalid ja kontrollima kas keegi on võitnud. Selle jaoks me salvestame oma nuppude teksti
         String[][] field = new String[3][3];
-
+        //Siin ma tahan sisetada kõik nuppude tekstid string arryse ja seda ma teen nested loopiga.
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
+                //Siin me läbime kõik oma nuppud ja salvestame nad kõik oma string arryse
                 field[i][j] = buttons[i][j].getText().toString();
             }
         }
-
+        //Siin me kasutame string arry-d, et kontrollida kõik oma read
         for (int i = 0; i < 3; i++) {
+            //Siin me ei tee loopi ja vaid läbime otse kõik oma veerud
+            //Võrdleb kõiki kolme fieldi mis asuvad üksteise kõrval
             if (field[i][0].equals(field[i][1])
                     && field[i][0].equals(field[i][2])
+                    //Teeb kindlaks, et kõik kolm fieldi ei oleks tühjad. Sest kui oleksid, siis meil poleks võitjat
                     && !field[i][0].equals("")){
+                //Mis iganes asi kutsub checkForWin meetodit, saab return true ja teeb, et võitja on olemas
                 return true;
             }
         }
-
+        //Siin me kasutame string arry-d, et kontrollida kõik oma veerud
         for (int i = 0; i < 3; i++) {
             if (field[0][i].equals(field[1][i])
                     && field[0][i].equals(field[2][i])
@@ -105,38 +123,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         }
-
+        //Kontrollib esimest diagonaali
         if (field[0][0].equals(field[1][1])
                 && field[0][0].equals(field[2][2])
                 && !field[0][0].equals("")) {
             return true;
         }
-
+        //Kontrollib teist diagonaali
         if (field[0][2].equals(field[1][1])
                 && field[0][2].equals(field[2][0])
                 && !field[0][2].equals("")) {
             return true;
         }
-
+        //Kui kõik kolm Rida, veerude või diagonaali kontroll ei võrdu true-ga siis see returnib flase-ina ehk võitjat pole ja tekkib viigi seis
         return false;
     }
-
+    //Kui mängija üks võidab, tuleb ekraanile sõnum: Player 1 wins!
     private void player1Wins(){
         player1Points++;
         Toast.makeText(this, "Player 1 wins!", Toast.LENGTH_SHORT).show();
+        //Uuendab textViewe nii et need näitaksid mängija ühe punktide kogust
         updatePointsText();
+        //Lähestab meie mängu ala et uus round saaks alata
         resetBoard();
     }
-
+    //Kui mängija kaks võidab, tuleb ekraanile sõnum: Player 2 wins!
     private void player2Wins(){
         player2Points++;
         Toast.makeText(this, "Player 2 wins!", Toast.LENGTH_SHORT).show();
+        //Uuendab textViewe nii et need näitaksid mängija ühe punktide kogust
         updatePointsText();
+        //Lähestab meie mängu ala et uus round saaks alata
         resetBoard();
     }
-
+    //Kui tuleb viik, tuleb ekraanile sõnum: Draw!
     private void draw(){
         Toast.makeText(this, "Draw!", Toast.LENGTH_SHORT).show();
+        //Lähestab meie mängu ala et uus round saaks alata
         resetBoard();
     }
 
